@@ -24,6 +24,26 @@ const userName = document.getElementById('user-name');
 const userEmail = document.getElementById('user-email');
 const userPic = document.getElementById('user-pic');
 
+// UX helpers
+function showSignedIn(user) {
+  statusEl.textContent = 'Signed in';
+  userEl.hidden = false;
+  userName.textContent = user.displayName || '';
+  userEmail.textContent = user.email || '';
+  userPic.src = user.photoURL || '';
+  signinBtn.hidden = true;
+  signoutBtn.hidden = false;
+}
+function showSignedOut() {
+  statusEl.textContent = 'Not signed in';
+  userEl.hidden = true;
+  userName.textContent = '';
+  userEmail.textContent = '';
+  userPic.src = '';
+  signinBtn.hidden = false;
+  signoutBtn.hidden = true;
+}
+
 signinBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
@@ -43,20 +63,8 @@ signoutBtn.addEventListener('click', async () => {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    statusEl.textContent = 'Signed in';
-    userEl.style.display = 'flex';
-    userName.textContent = user.displayName || '';
-    userEmail.textContent = user.email || '';
-    userPic.src = user.photoURL || '';
-    signinBtn.style.display = 'none';
-    signoutBtn.style.display = 'inline-block';
+    showSignedIn(user);
   } else {
-    statusEl.textContent = 'Not signed in';
-    userEl.style.display = 'none';
-    userName.textContent = '';
-    userEmail.textContent = '';
-    userPic.src = '';
-    signinBtn.style.display = 'inline-block';
-    signoutBtn.style.display = 'none';
+    showSignedOut();
   }
 });
